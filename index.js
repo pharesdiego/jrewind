@@ -1,108 +1,14 @@
-import React, { PureComponent, Fragment } from 'react';
-
-const JRewind = (initialValue = null) => {
-  const __MS__ = 50;
-  let currentTime = 0;
-  let disk = {};
-  let value = initialValue;
-  let interval = null;
-  return {
-    /**
-     * @description Sets the value that will be recorded on each interval after JRewind
-     * starts to record (so after the "startRecording" function is invoked).
-     * @param {any} stuff - any value the user wants to save on the disk.
-     */
-    feeder: (stuff) => {
-      value = stuff;
-    },
-    /**
-     * @description Sets an interval that runs each 50ms (20fps). On each interval, the value
-     * provided by the user using the function "feeder" will be recorded.
-     */
-    startRecording: () => {
-      // prevents "startRecording" to start multiple intervals
-      if(interval) return;
-
-      interval = setInterval(() => {
-        disk[currentTime] = {
-          currentTime,
-          value,
-          done: false
-        }
-        currentTime += 50;
-      }, __MS__)
-    },
-    /**
-     * @description Clears the interval initialized by "startRecording" and sets a final record 
-     * with the "done" property setted to true.
-     */
-    stopRecording: () => {
-      clearInterval(interval);
-      disk[currentTime] = {
-        currentTime,
-        value,
-        done: true
-      }
-    },
-    /**
-     * 
-     */
-    getDuration: () => currentTime,
-    getDisk: () => disk,
-    Rewinder: class extends PureComponent {
-      constructor(props) {
-        super(props);
-        this.state = {}
-        this.interval = null;
-      }
-
-      run = () => {
-        if(this.interval) return;
-
-        let keyOfRecord = 0;
-        this.interval = setInterval(() => {
-          let record = disk[keyOfRecord];
-          if(record.done) {
-            clearInterval(this.interval)
-            this.interval = null;
-          };
-
-          this.setState(record);
-          keyOfRecord += 50;
-        }, __MS__)
-      }
-
-      stop = () => {
-        clearInterval(this.interval);
-        clearInterval(interval);
-        disk[currentTime] = {
-          currentTime,
-          value,
-          done: true
-        }
-        this.interval = null;
-        this.forceUpdate()
-      }
-
-      rewindToMs = (ms) => {
-        this.setState(disk[ms])
-      }
-
-      render() {
-        return (
-          <Fragment>
-            { 
-              this.props.render(this.state, {
-                run: this.run, 
-                stop: this.stop, 
-                rewindToMs: this.rewindToMs 
-              })
-            }
-          </Fragment>
-        )
-      }
-    }
-  }
-}
-
-export default JRewind;
+module.exports=function(e){var t={};function n(r){if(t[r])return t[r].exports;var o=t[r]={i:r,l:!1,exports:{}};return e[r].call(o.exports,o,o.exports,n),o.l=!0,o.exports}return n.m=e,n.c=t,n.d=function(e,t,r){n.o(e,t)||Object.defineProperty(e,t,{enumerable:!0,get:r})},n.r=function(e){"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},n.t=function(e,t){if(1&t&&(e=n(e)),8&t)return e;if(4&t&&"object"==typeof e&&e&&e.__esModule)return e;var r=Object.create(null);if(n.r(r),Object.defineProperty(r,"default",{enumerable:!0,value:e}),2&t&&"string"!=typeof e)for(var o in e)n.d(r,o,function(t){return e[t]}.bind(null,o));return r},n.n=function(e){var t=e&&e.__esModule?function(){return e.default}:function(){return e};return n.d(t,"a",t),t},n.o=function(e,t){return Object.prototype.hasOwnProperty.call(e,t)},n.p="",n(n.s=1)}([function(e,t,n){"use strict";e.exports=n(2)},function(e,t,n){"use strict";n.r(t);var r=n(0),o=n.n(r);function u(e){return(u="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e})(e)}function i(e,t){for(var n=0;n<t.length;n++){var r=t[n];r.enumerable=r.enumerable||!1,r.configurable=!0,"value"in r&&(r.writable=!0),Object.defineProperty(e,r.key,r)}}function l(e,t){return!t||"object"!==u(t)&&"function"!=typeof t?function(e){if(void 0===e)throw new ReferenceError("this hasn't been initialised - super() hasn't been called");return e}(e):t}function c(e){return(c=Object.setPrototypeOf?Object.getPrototypeOf:function(e){return e.__proto__||Object.getPrototypeOf(e)})(e)}function f(e,t){return(f=Object.setPrototypeOf||function(e,t){return e.__proto__=t,e})(e,t)}t.default=function(){var e=50,t=0,n={},u=arguments.length>0&&void 0!==arguments[0]?arguments[0]:null,a=null;return{feeder:function(e){u=e},startRecording:function(){a||(a=setInterval(function(){n[t]={currentTime:t,value:u,done:!1},t+=50},e))},stopRecording:function(){clearInterval(a),n[t]={currentTime:t,value:u,done:!0}},getDuration:function(){return t},getDisk:function(){return n},Rewinder:function(s){function p(r){var o;return function(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}(this,p),(o=l(this,c(p).call(this,r))).run=function(){if(!o.interval){var t=0;o.interval=setInterval(function(){var e=n[t];e.done&&(clearInterval(o.interval),o.interval=null),o.setState(e),t+=50},e)}},o.stop=function(){clearInterval(o.interval),clearInterval(a),n[t]={currentTime:t,value:u,done:!0},o.interval=null,o.forceUpdate()},o.rewindToMs=function(e){o.setState(n[e])},o.state={},o.interval=null,o}return function(e,t){if("function"!=typeof t&&null!==t)throw new TypeError("Super expression must either be null or a function");e.prototype=Object.create(t&&t.prototype,{constructor:{value:e,writable:!0,configurable:!0}}),t&&f(e,t)}(p,r.PureComponent),function(e,t,n){t&&i(e.prototype,t),n&&i(e,n)}(p,[{key:"render",value:function(){return o.a.createElement(r.Fragment,null,this.props.render(this.state,{run:this.run,stop:this.stop,rewindToMs:this.rewindToMs}))}}]),p}()}}},function(e,t,n){"use strict";
+/** @license React v16.5.2
+ * react.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */var r=n(3),o="function"==typeof Symbol&&Symbol.for,u=o?Symbol.for("react.element"):60103,i=o?Symbol.for("react.portal"):60106,l=o?Symbol.for("react.fragment"):60107,c=o?Symbol.for("react.strict_mode"):60108,f=o?Symbol.for("react.profiler"):60114,a=o?Symbol.for("react.provider"):60109,s=o?Symbol.for("react.context"):60110,p=o?Symbol.for("react.async_mode"):60111,y=o?Symbol.for("react.forward_ref"):60112;o&&Symbol.for("react.placeholder");var d="function"==typeof Symbol&&Symbol.iterator;function v(e){for(var t=arguments.length-1,n="https://reactjs.org/docs/error-decoder.html?invariant="+e,r=0;r<t;r++)n+="&args[]="+encodeURIComponent(arguments[r+1]);!function(e,t,n,r,o,u,i,l){if(!e){if(e=void 0,void 0===t)e=Error("Minified exception occurred; use the non-minified dev environment for the full error message and additional helpful warnings.");else{var c=[n,r,o,u,i,l],f=0;(e=Error(t.replace(/%s/g,function(){return c[f++]}))).name="Invariant Violation"}throw e.framesToPop=1,e}}(!1,"Minified React error #"+e+"; visit %s for the full message or use the non-minified dev environment for full errors and additional helpful warnings. ",n)}var b={isMounted:function(){return!1},enqueueForceUpdate:function(){},enqueueReplaceState:function(){},enqueueSetState:function(){}},h={};function m(e,t,n){this.props=e,this.context=t,this.refs=h,this.updater=n||b}function g(){}function _(e,t,n){this.props=e,this.context=t,this.refs=h,this.updater=n||b}m.prototype.isReactComponent={},m.prototype.setState=function(e,t){"object"!=typeof e&&"function"!=typeof e&&null!=e&&v("85"),this.updater.enqueueSetState(this,e,t,"setState")},m.prototype.forceUpdate=function(e){this.updater.enqueueForceUpdate(this,e,"forceUpdate")},g.prototype=m.prototype;var O=_.prototype=new g;O.constructor=_,r(O,m.prototype),O.isPureReactComponent=!0;var j={current:null,currentDispatcher:null},S=Object.prototype.hasOwnProperty,w={key:!0,ref:!0,__self:!0,__source:!0};function P(e,t,n){var r=void 0,o={},i=null,l=null;if(null!=t)for(r in void 0!==t.ref&&(l=t.ref),void 0!==t.key&&(i=""+t.key),t)S.call(t,r)&&!w.hasOwnProperty(r)&&(o[r]=t[r]);var c=arguments.length-2;if(1===c)o.children=n;else if(1<c){for(var f=Array(c),a=0;a<c;a++)f[a]=arguments[a+2];o.children=f}if(e&&e.defaultProps)for(r in c=e.defaultProps)void 0===o[r]&&(o[r]=c[r]);return{$$typeof:u,type:e,key:i,ref:l,props:o,_owner:j.current}}function k(e){return"object"==typeof e&&null!==e&&e.$$typeof===u}var x=/\/+/g,E=[];function $(e,t,n,r){if(E.length){var o=E.pop();return o.result=e,o.keyPrefix=t,o.func=n,o.context=r,o.count=0,o}return{result:e,keyPrefix:t,func:n,context:r,count:0}}function C(e){e.result=null,e.keyPrefix=null,e.func=null,e.context=null,e.count=0,10>E.length&&E.push(e)}function R(e,t,n){return null==e?0:function e(t,n,r,o){var l=typeof t;"undefined"!==l&&"boolean"!==l||(t=null);var c=!1;if(null===t)c=!0;else switch(l){case"string":case"number":c=!0;break;case"object":switch(t.$$typeof){case u:case i:c=!0}}if(c)return r(o,t,""===n?"."+T(t,0):n),1;if(c=0,n=""===n?".":n+":",Array.isArray(t))for(var f=0;f<t.length;f++){var a=n+T(l=t[f],f);c+=e(l,a,r,o)}else if(a=null===t||"object"!=typeof t?null:"function"==typeof(a=d&&t[d]||t["@@iterator"])?a:null,"function"==typeof a)for(t=a.call(t),f=0;!(l=t.next()).done;)c+=e(l=l.value,a=n+T(l,f++),r,o);else"object"===l&&v("31","[object Object]"==(r=""+t)?"object with keys {"+Object.keys(t).join(", ")+"}":r,"");return c}(e,"",t,n)}function T(e,t){return"object"==typeof e&&null!==e&&null!=e.key?function(e){var t={"=":"=0",":":"=2"};return"$"+(""+e).replace(/[=:]/g,function(e){return t[e]})}(e.key):t.toString(36)}function I(e,t){e.func.call(e.context,t,e.count++)}function M(e,t,n){var r=e.result,o=e.keyPrefix;e=e.func.call(e.context,t,e.count++),Array.isArray(e)?A(e,r,n,function(e){return e}):null!=e&&(k(e)&&(e=function(e,t){return{$$typeof:u,type:e.type,key:t,ref:e.ref,props:e.props,_owner:e._owner}}(e,o+(!e.key||t&&t.key===e.key?"":(""+e.key).replace(x,"$&/")+"/")+n)),r.push(e))}function A(e,t,n,r,o){var u="";null!=n&&(u=(""+n).replace(x,"$&/")+"/"),R(e,M,t=$(t,u,r,o)),C(t)}var U={Children:{map:function(e,t,n){if(null==e)return e;var r=[];return A(e,r,null,t,n),r},forEach:function(e,t,n){if(null==e)return e;R(e,I,t=$(null,null,t,n)),C(t)},count:function(e){return R(e,function(){return null},null)},toArray:function(e){var t=[];return A(e,t,null,function(e){return e}),t},only:function(e){return k(e)||v("143"),e}},createRef:function(){return{current:null}},Component:m,PureComponent:_,createContext:function(e,t){return void 0===t&&(t=null),(e={$$typeof:s,_calculateChangedBits:t,_currentValue:e,_currentValue2:e,Provider:null,Consumer:null,unstable_read:null}).Provider={$$typeof:a,_context:e},e.Consumer=e,e.unstable_read=function(e,t){var n=j.currentDispatcher;return null===n&&v("277"),n.readContext(e,t)}.bind(null,e),e},forwardRef:function(e){return{$$typeof:y,render:e}},Fragment:l,StrictMode:c,unstable_AsyncMode:p,unstable_Profiler:f,createElement:P,cloneElement:function(e,t,n){(null===e||void 0===e)&&v("267",e);var o=void 0,i=r({},e.props),l=e.key,c=e.ref,f=e._owner;if(null!=t){void 0!==t.ref&&(c=t.ref,f=j.current),void 0!==t.key&&(l=""+t.key);var a=void 0;for(o in e.type&&e.type.defaultProps&&(a=e.type.defaultProps),t)S.call(t,o)&&!w.hasOwnProperty(o)&&(i[o]=void 0===t[o]&&void 0!==a?a[o]:t[o])}if(1===(o=arguments.length-2))i.children=n;else if(1<o){a=Array(o);for(var s=0;s<o;s++)a[s]=arguments[s+2];i.children=a}return{$$typeof:u,type:e.type,key:l,ref:c,props:i,_owner:f}},createFactory:function(e){var t=P.bind(null,e);return t.type=e,t},isValidElement:k,version:"16.5.2",__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED:{ReactCurrentOwner:j,assign:r}},q={default:U},D=q&&U||q;e.exports=D.default||D},function(e,t,n){"use strict";
+/*
+object-assign
+(c) Sindre Sorhus
+@license MIT
+*/var r=Object.getOwnPropertySymbols,o=Object.prototype.hasOwnProperty,u=Object.prototype.propertyIsEnumerable;e.exports=function(){try{if(!Object.assign)return!1;var e=new String("abc");if(e[5]="de","5"===Object.getOwnPropertyNames(e)[0])return!1;for(var t={},n=0;n<10;n++)t["_"+String.fromCharCode(n)]=n;if("0123456789"!==Object.getOwnPropertyNames(t).map(function(e){return t[e]}).join(""))return!1;var r={};return"abcdefghijklmnopqrst".split("").forEach(function(e){r[e]=e}),"abcdefghijklmnopqrst"===Object.keys(Object.assign({},r)).join("")}catch(e){return!1}}()?Object.assign:function(e,t){for(var n,i,l=function(e){if(null===e||void 0===e)throw new TypeError("Object.assign cannot be called with null or undefined");return Object(e)}(e),c=1;c<arguments.length;c++){for(var f in n=Object(arguments[c]))o.call(n,f)&&(l[f]=n[f]);if(r){i=r(n);for(var a=0;a<i.length;a++)u.call(n,i[a])&&(l[i[a]]=n[i[a]])}}return l}}]);
